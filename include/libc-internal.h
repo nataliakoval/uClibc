@@ -66,6 +66,10 @@ libc_hidden_proto(__xpg_strerror_r)
 
 /* internal access to program name */
 extern const char *__uclibc_progname attribute_hidden;
+ 
+/* internal access to auxvec AT_PLATFORM, cache info */
+extern const char *__auxv_platform attribute_hidden;
+extern int __auxv_l1d_cacheshape attribute_hidden;
 
 #  ifdef __UCLIBC_HAS_FORTIFY__
 extern void __chk_fail(void) attribute_noreturn;

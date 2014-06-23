@@ -28,6 +28,7 @@
 #ifndef __ARCH_HAS_NO_LDSO__
 #include <fcntl.h>
 #endif
+#include <libc-internal.h>
 #ifdef __UCLIBC_HAS_THREADS_NATIVE__
 #include <pthread-functions.h>
 #include <not-cancel.h>
@@ -159,6 +160,12 @@ weak_alias (__progname, program_invocation_short_name)
 weak_alias (__progname_full, program_invocation_name)
 # endif
 #endif
+
+/* Highest numbered auxvec entry to copy into auxvt[] */
+#define AT_MAX     AT_L3_CACHESHAPE
+
+attribute_hidden const char *__auxv_platform = NULL;
+attribute_hidden int __auxv_l1d_cacheshape = 0;
 
 /*
  * Declare the __environ global variable and create a weak alias environ.
@@ -322,7 +329,7 @@ void __uClibc_main(int (*main)(int, char **, char **), int argc,
 {
 #if !defined __ARCH_HAS_NO_LDSO__ && !defined SHARED
     unsigned long *aux_dat;
-    ElfW(auxv_t) auxvt[AT_EGID + 1];
+    ElfW(auxv_t) auxvt[AT_MAX + 1];
 #endif
 
 #ifdef __UCLIBC_HAS_THREADS_NATIVE__
@@ -356,7 +363,7 @@ void __uClibc_main(int (*main)(int, char **, char **), int argc,
     aux_dat++;
     while (*aux_dat) {
 	ElfW(auxv_t) *auxv_entry = (ElfW(auxv_t) *) aux_dat;
-	if (auxv_entry->a_type <= AT_EGID) {
+	if (auxv_entry->a_type <= AT_MAX) {
 	    memcpy(&(auxvt[auxv_entry->a_type]), auxv_entry, sizeof(ElfW(auxv_t)));
 	}
 	aux_dat += 2;
@@ -378,6 +385,8 @@ void __uClibc_main(int (*main)(int, char **, char **), int argc,
     __pagesize = _dl_pagesize;
 
 #ifndef SHARED
+    __auxv_platform = (char *)auxvt[AT_PLATFORM].a_un.a_val;
+    __auxv_l1d_cacheshape = (int)auxvt[AT_L1D_CACHESHAPE].a_un.a_val;
     /* Prevent starting SUID binaries where the stdin. stdout, and
      * stderr file descriptors are not already opened. */
     if ((auxvt[AT_UID].a_un.a_val == (size_t)-1 && __check_suid()) ||
