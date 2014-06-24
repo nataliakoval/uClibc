@@ -36,7 +36,9 @@ CSRC-$(UCLIBC_LINUX_SPECIFIC) += \
 	readahead.c \
 	reboot.c \
 	remap_file_pages.c \
+	sched_cpualloc.c \
 	sched_cpucount.c \
+	sched_cpufree.c \
 	sched_getaffinity.c \
 	sched_getcpu.c \
 	sched_setaffinity.c \

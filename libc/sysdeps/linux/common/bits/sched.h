@@ -188,13 +188,10 @@ __BEGIN_DECLS
 
 extern int __sched_cpucount (size_t __setsize, const cpu_set_t *__setp)
   __THROW;
-#if 0 /* in uClibc we use macros */
+
 extern cpu_set_t *__sched_cpualloc (size_t __count) __THROW __wur;
 extern void __sched_cpufree (cpu_set_t *__set) __THROW;
-#else
-# define __sched_cpualloc(cnt) ((cpu_set_t *)malloc(__CPU_ALLOC_SIZE(cnt)))
-# define __sched_cpufree(__set) free(__set)
-#endif
+
 __END_DECLS
 
 #endif
