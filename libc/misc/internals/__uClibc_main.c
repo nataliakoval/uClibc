@@ -152,9 +152,9 @@ const char *__uclibc_progname = "";
 # define __progname_full program_invocation_name
 #endif
 #if defined __UCLIBC_HAS___PROGNAME__ || (defined __USE_GNU && defined __UCLIBC_HAS_PROGRAM_INVOCATION_NAME__)
-const char *__progname = "";
+char *__progname = "";
 /* psm: why have a visible __progname_full? */
-const char *__progname_full = "";
+char *__progname_full = "";
 # if defined __UCLIBC_HAS___PROGNAME__ && defined __USE_GNU && defined __UCLIBC_HAS_PROGRAM_INVOCATION_NAME__
 weak_alias (__progname, program_invocation_short_name)
 weak_alias (__progname_full, program_invocation_name)
